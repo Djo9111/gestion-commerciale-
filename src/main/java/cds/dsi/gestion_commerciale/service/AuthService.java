@@ -11,4 +11,7 @@ public interface AuthService {
     Map<String, String> authenticate(LoginRequest loginRequest);
     Map<String, String> getUserInfo(String nomUtilisateur);
     List<PerformanceDto> getPerformance(String nomUtilisateur, LocalDate startOfWeek, LocalDate endOfWeek);
+
+    // Nouvelle méthode
+    List<Map<String, String>> getAllUsers();
 }

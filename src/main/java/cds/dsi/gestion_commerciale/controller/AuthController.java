@@ -55,4 +55,12 @@ public class AuthController {
         }
         return ResponseEntity.ok(data);
     }
+
+    // === LISTE DES UTILISATEURS ===
+    @GetMapping("/users")
+    public ResponseEntity<?> getAllUsers() {
+        List<Map<String, String>> users = authService.getAllUsers();
+        return ResponseEntity.ok(users);
+    }
+
 }

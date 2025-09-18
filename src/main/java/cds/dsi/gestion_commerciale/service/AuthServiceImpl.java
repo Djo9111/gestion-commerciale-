@@ -95,4 +95,18 @@ public class AuthServiceImpl implements AuthService {
         return data;
     }
 
+    @Override
+    public List<Map<String, String>> getAllUsers() {
+        return managerRepository.findAll()
+                .stream()
+                .map(m -> {
+                    Map<String, String> userMap = new HashMap<>();
+                    userMap.put("nomUtilisateur", m.getNomUtilisateur());
+                    userMap.put("nomComplet", m.getNom());
+                    return userMap;
+                })
+                .toList();
+    }
+
+
 }
