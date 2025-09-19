@@ -1,11 +1,15 @@
 package cds.dsi.gestion_commerciale.controller;
 
 import cds.dsi.gestion_commerciale.dto.UploadResultDTO;
+import cds.dsi.gestion_commerciale.entity.ContactPlan;
 import cds.dsi.gestion_commerciale.service.ContactPlanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/import")
@@ -35,4 +39,14 @@ public class ContactPlanController {
             return ResponseEntity.badRequest().body(errorResult);
         }
     }
+    @GetMapping("/my-contacts/{nomUtilisateur}")
+    public ResponseEntity<?> getMyContacts(@PathVariable String nomUtilisateur) {
+        try {
+            List<ContactPlan> contacts = contactPlanService.getContactsByUser(nomUtilisateur);
+            return ResponseEntity.ok(contacts);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
+        }
+    }
+
 }

@@ -136,4 +136,10 @@ public class ContactPlanService {
             return null;
         }
     }
+
+
+    public List<ContactPlan> getContactsByUser(String nomUtilisateur) {
+        return contactPlanRepository.findByNomUtilisateur(nomUtilisateur);
+    }
+
 }

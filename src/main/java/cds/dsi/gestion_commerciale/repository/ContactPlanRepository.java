@@ -4,6 +4,7 @@ import cds.dsi.gestion_commerciale.entity.ContactPlan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -15,4 +16,6 @@ public interface ContactPlanRepository extends JpaRepository<ContactPlan, Long> 
 
     // Nouvelle méthode pour vérifier si le contact existe déjà (FDC + numéro client)
     Optional<ContactPlan> findByFdcAndNumeroClient(String fdc, String numeroClient);
+    List<ContactPlan> findByNomUtilisateur(String nomUtilisateur);
+
 }
