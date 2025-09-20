@@ -1,8 +1,8 @@
 package cds.dsi.gestion_commerciale.controller;
 
-
 import cds.dsi.gestion_commerciale.entity.Appointment;
 import cds.dsi.gestion_commerciale.service.AppointmentService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,22 +46,54 @@ public class AppointmentController {
         return appointmentService.getAppointmentsByClient(numeroClient);
     }
 
-    // UPDATE
+    // UPDATE PARTIEL (PUT tolérant)
     @PutMapping("/{id}")
     public Appointment updateAppointment(@PathVariable Long id, @RequestBody Appointment appointmentDetails) {
         return appointmentService.getAppointmentById(id).map(appointment -> {
-            appointment.setContactPlanId(appointmentDetails.getContactPlanId());
-            appointment.setNomUtilisateur(appointmentDetails.getNomUtilisateur());
-            appointment.setNumeroClient(appointmentDetails.getNumeroClient());
-            appointment.setDateRdv(appointmentDetails.getDateRdv());
-            appointment.setDureeMinutes(appointmentDetails.getDureeMinutes());
-            appointment.setTypeRdv(appointmentDetails.getTypeRdv());
-            appointment.setObjetRdv(appointmentDetails.getObjetRdv());
-            appointment.setStatutRdv(appointmentDetails.getStatutRdv());
-            appointment.setCommentaires(appointmentDetails.getCommentaires());
+
+            // N'écrase PAS avec null : on met à jour seulement si fourni
+            if (appointmentDetails.getContactPlanId() != null) {
+                appointment.setContactPlanId(appointmentDetails.getContactPlanId());
+            }
+            if (appointmentDetails.getNomUtilisateur() != null) {
+                appointment.setNomUtilisateur(appointmentDetails.getNomUtilisateur());
+            }
+            if (appointmentDetails.getNumeroClient() != null) {
+                appointment.setNumeroClient(appointmentDetails.getNumeroClient());
+            }
+            if (appointmentDetails.getDateRdv() != null) {
+                appointment.setDateRdv(appointmentDetails.getDateRdv());
+            }
+            if (appointmentDetails.getDureeMinutes() != null) {
+                appointment.setDureeMinutes(appointmentDetails.getDureeMinutes());
+            }
+            if (appointmentDetails.getTypeRdv() != null) {
+                appointment.setTypeRdv(appointmentDetails.getTypeRdv());
+            }
+            if (appointmentDetails.getObjetRdv() != null) {
+                appointment.setObjetRdv(appointmentDetails.getObjetRdv());
+            }
+            if (appointmentDetails.getStatutRdv() != null) {
+                appointment.setStatutRdv(appointmentDetails.getStatutRdv());
+            }
+            if (appointmentDetails.getCommentaires() != null) {
+                appointment.setCommentaires(appointmentDetails.getCommentaires());
+            }
+
+            // Garde-fou : si la colonne est NOT NULL, ne jamais sauver un null
+            if (appointment.getDateRdv() == null) {
+                throw new org.springframework.web.server.ResponseStatusException(
+                        org.springframework.http.HttpStatus.BAD_REQUEST,
+                        "dateRdv est obligatoire pour un RDV"
+                );
+            }
+
             return appointmentService.saveAppointment(appointment);
         }).orElseThrow(() -> new RuntimeException("RDV non trouvé avec id " + id));
     }
+
+
+
 
     // DELETE
     @DeleteMapping("/{id}")
